@@ -11,7 +11,7 @@ export const Route = createFileRoute("/$username/donate")({
   head: ({ params }) => {
     const handle = (params.username ?? "").replace(/^@/, "");
     const title = `Steun @${handle} — ROUT`;
-    const description = `Geef @${handle} rechtstreekse steun via ROUT: kies een bedrag, laat een bericht achter en betaal veilig met Bancontact, iDEAL, Apple Pay of kaart.`;
+    const description = `Geef @${handle} rechtstreekse steun via ROUT: kies een bedrag en scan de betaal-QR met je eigen bank-app.`;
     const path = `/${handle}/donate`;
     return {
       links: canonicalLinks(path),
