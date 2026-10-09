@@ -1,0 +1,1 @@
+- The Live Auth debugger (`oauth_debug_events`, db/56) is written only via `logOAuthEvent()` in `debug-events.server.ts`, which strips query strings and never stores IPs, user ids, tokens or codes. Why: debug data is developer-facing and must stay PII-free.
