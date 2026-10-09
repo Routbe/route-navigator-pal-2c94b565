@@ -105,7 +105,7 @@ import { VerifiedHandleBuilder } from "@/components/settings/VerifiedHandleBuild
 import { ProfileFavoritesAccordion } from "@/components/studio/ProfileFavoritesAccordion";
 import { MAX_FAVORITES } from "@/lib/favorites";
 import { ProfileView } from "@/components/profile/ProfileView";
-import { DonationPanel } from "@/components/dashboard/DonationPanel";
+import { TipPagePanel } from "@/components/dashboard/TipPagePanel";
 import {
   checkStudioHandle,
   getStudioAnalytics,
@@ -1572,7 +1572,7 @@ export function ProfileEditor({ variant = "verified" }: { variant?: ProfileVaria
                 </AccordionContent>
               </AccordionItem>
 
-              {/* Steunpagina staat er voor iedereen — free én Pro. */}
+              {/* Steunpagina: enkel voor geverifieerde leden met een root-handle (server-side afgedwongen). */}
               <AccordionItem
                 value="support_page"
                 className="rounded-2xl border border-border bg-card px-4 sm:px-5"
@@ -1581,11 +1581,7 @@ export function ProfileEditor({ variant = "verified" }: { variant?: ProfileVaria
                   <span className="text-base font-medium">💛 Steunpagina &amp; donaties</span>
                 </AccordionTrigger>
                 <AccordionContent className="space-y-4 pb-5">
-                  <DonationPanel
-                    handle={claimed || normalized || null}
-                    urlStyle={urlStyle}
-                    verified={verified}
-                  />
+                  <TipPagePanel />
                 </AccordionContent>
               </AccordionItem>
 
