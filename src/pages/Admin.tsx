@@ -1020,6 +1020,9 @@ export default function Admin() {
             <a href="/admin/gift-cards" className="inline-block text-sm underline">
               Cadeaubon-verzending
             </a>
+            <a href="/admin/custom-badges" className="inline-block text-sm underline">
+              Eigen badges
+            </a>
           </div>
         </header>
 
@@ -1125,6 +1128,7 @@ export default function Admin() {
               refreshAliases={refreshAliases}
               refreshAudit={refreshAudit}
             />
+            <UserCustomBadgesCard />
           </TabsContent>
 
           {/* ---------------------------------------------------------- */}

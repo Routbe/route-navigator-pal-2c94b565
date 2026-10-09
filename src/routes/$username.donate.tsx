@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import Donate from "@/pages/Donate";
+import Donate from "@/pages/TipPage";
 import { canonicalLinks, donateJsonLd } from "@/lib/social-meta";
 
 /** Schone wortel-URL voor geverifieerde leden: rout.be/<naam>/donate */

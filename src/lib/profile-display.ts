@@ -403,7 +403,7 @@ export function parseDisplayPrefs(raw: unknown): ProfileDisplayPrefs {
       r["badgeShowcaseVisible"] === undefined ? true : Boolean(r["badgeShowcaseVisible"]),
     publicProfile: r["publicProfile"] === undefined ? true : Boolean(r["publicProfile"]),
     timelineVisible: r["timelineVisible"] === undefined ? true : Boolean(r["timelineVisible"]),
-    badgeType: oneOf(r["badgeType"], ["verified", "human", "domain", "none"] as const, "verified"),
+    badgeType: oneOf(r["badgeType"], ["verified", "human", "domain", "influencer", "none"] as const, "verified"),
     badgeNameFormat: oneOf(r["badgeNameFormat"], ["full", "initials", "lower"] as const, "full"),
     badgeBackdrop: oneOf(r["badgeBackdrop"], ["none", "glow", "sticker", "ring"] as const, "none"),
     badgeBackdropColor: colorOrNull(r["badgeBackdropColor"]),

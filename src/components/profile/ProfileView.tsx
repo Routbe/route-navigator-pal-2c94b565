@@ -38,6 +38,7 @@ import { BadgeShowcase } from "@/components/profile/BadgeShowcase";
 import { VerifiedInfoDialog } from "@/components/profile/VerifiedInfoDialog";
 import { monthYear } from "@/components/profile/VerifiedBadgePopover";
 import { ProfileBadge } from "@/components/profile/ProfileBadge";
+import { CustomBadgeRow } from "@/components/profile/CustomBadgeRow";
 import type { BadgeType } from "@/lib/profile-display";
 import { EarlyBelieverBadge } from "@/components/profile/EarlyBelieverBadge";
 import {
@@ -335,6 +336,7 @@ export function ProfileView({
             />
           )}
         </h1>
+        {!free && <CustomBadgeRow handle={profile.username} mutedColor={t.muted} />}
 
         {earlyBeliever && (
           <EarlyBelieverBadge
