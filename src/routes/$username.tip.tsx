@@ -11,7 +11,7 @@ export const Route = createFileRoute("/$username/tip")({
   head: ({ params }) => {
     const handle = (params.username ?? "").replace(/^@/, "");
     const title = `Geef een fooi aan @${handle} — ROUT`;
-    const description = `Steun @${handle} met een fooi: kies een bedrag, laat een bericht achter scan de betaal-QR met je bank-app.`;
+    const description = `Steun @${handle} met een fooi: kies een bedrag en scan de betaal-QR met je bank-app.`;
     const path = `/${handle}/tip`;
     return {
       links: canonicalLinks(path),
