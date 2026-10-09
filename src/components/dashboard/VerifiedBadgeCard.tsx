@@ -96,8 +96,8 @@ export function VerifiedBadgeCard({
         )}
         <div className="space-y-4">
           <div className="flex flex-wrap gap-3">
-            <Seg value={mode} onChange={setMode} options={[["auto", "Volgt de site"], ["light", "Licht"], ["dark", "Donker"]]} />
-            <Seg value={size} onChange={setSize} options={[["md", "Standaard"], ["sm", "Klein"]]} />
+            <Seg value={mode} onChange={(v) => setMode(v as ThemeMode)} options={[["auto", "Volgt de site"], ["light", "Licht"], ["dark", "Donker"]]} />
+            <Seg value={size} onChange={(v) => setSize(v as Size)} options={[["md", "Standaard"], ["sm", "Klein"]]} />
           </div>
           <div className="grid grid-cols-2 overflow-hidden rounded-xl border border-border">
             <div className="grid place-items-center bg-background p-5">
