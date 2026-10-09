@@ -31,6 +31,10 @@ export type StudioProfile = {
   rootStatus: string | null;
   /** Handle van het gratis aliasprofiel (rout.be/u/<handle>). */
   aliasHandle: string | null;
+  /** Goedgekeurde bedrijfsverificatie (zwarte badge). */
+  isBusiness: boolean;
+  /** Goedgekeurde influencerverificatie (roze badge). */
+  isInfluencer: boolean;
 };
 
 type Row = Record<string, unknown>;
@@ -55,6 +59,8 @@ function toStudioProfile(row: Row): StudioProfile {
     subdomainAlias: (row["subdomain_alias"] as string | null) ?? null,
     rootStatus: (row["root_subdomain_status"] as string | null) ?? null,
     aliasHandle: (row["alias_handle"] as string | null) ?? null,
+    isBusiness: row["is_business"] === true,
+    isInfluencer: row["is_influencer"] === true,
   };
 }
 
@@ -65,7 +71,9 @@ export async function readStudioProfile(userId: string): Promise<StudioProfile |
            -- Tolerant: werkt ook wanneer migratie 18 nog niet is uitgevoerd.
            to_jsonb(profiles) -> 'display_prefs' as display_prefs,
            to_jsonb(profiles) ->> 'subdomain_alias' as subdomain_alias,
-           to_jsonb(profiles) ->> 'root_subdomain_status' as root_subdomain_status
+           to_jsonb(profiles) ->> 'root_subdomain_status' as root_subdomain_status,
+           coalesce((to_jsonb(profiles) ->> 'is_business')::boolean, false) as is_business,
+           coalesce((to_jsonb(profiles) ->> 'is_influencer')::boolean, false) as is_influencer
       from public.profiles
      where id = ${userId}
      limit 1
@@ -188,6 +196,17 @@ export async function writeStudioProfile(userId: string, input: StudioProfileInp
   // nog niet gedraaid is.
   let displayPrefs: Record<string, unknown> = {};
   if (input.displayPrefs) {
+    // Exclusieve badges zijn enkel kiesbaar na goedkeuring door een admin.
+    const kind = input.displayPrefs["badgeType"];
+    if (kind === "influencer" || kind === "domain") {
+      const flags = (await sql`
+        select coalesce((to_jsonb(profiles) ->> 'is_business')::boolean, false) as b,
+               coalesce((to_jsonb(profiles) ->> 'is_influencer')::boolean, false) as i
+          from public.profiles where id = ${userId} limit 1
+      `) as Row[];
+      const ok = kind === "influencer" ? flags[0]?.["i"] === true : flags[0]?.["b"] === true;
+      if (!ok) input.displayPrefs = { ...input.displayPrefs, badgeType: "verified" };
+    }
     try {
       const saved = (await sql`
         update public.profiles
@@ -255,6 +274,17 @@ export async function readPublicProfile(rawHandle: string) {
   }
   const profile = rows[0];
   if (!profile) return null;
+  // Privacyschild: bevestigt enkel "echte mens". De wettelijke naam en het land
+  // verlaten de server dan nooit — ook niet via de JSON van de pagina.
+  {
+    const { parseDisplayPrefs } = await import("./profile-display");
+    const prefs = parseDisplayPrefs(profile["display_prefs"]);
+    const approved = profile["is_business"] === true || profile["is_influencer"] === true;
+    if (!approved && ((prefs.badgeType !== "verified" && prefs.badgeType !== "domain") || !prefs.badgeVisible)) {
+      profile["verified_legal_name"] = null;
+      profile["country_code"] = null;
+    }
+  }
   // Gecachte sociale volgeraantallen: één goedkope join-vrije query, geen
   // externe HTTP-calls tijdens het laden van de publieke pagina. Een storing
   // hier mag het profiel zelf nooit mee naar beneden trekken.

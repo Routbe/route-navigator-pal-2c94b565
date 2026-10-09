@@ -28,6 +28,8 @@ export type StudioProfileDTO = {
   subdomainAlias: string | null;
   rootStatus: string | null;
   aliasHandle: string | null;
+  isBusiness?: boolean;
+  isInfluencer?: boolean;
 };
 
 export const getStudioProfile = createServerFn({ method: "GET" })

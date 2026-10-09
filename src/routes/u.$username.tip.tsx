@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import Donate from "@/pages/Donate";
+import Donate from "@/pages/TipPage";
 import { canonicalLinks, donateJsonLd } from "@/lib/social-meta";
 import { sanitizeHandleInput } from "@/lib/validations/sanitizeHandle";
 
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/u/$username/tip")({
   head: ({ params }) => {
     const handle = sanitizeHandleInput(params.username);
     const title = `Geef een fooi aan @${handle} — ROUT`;
-    const description = `Steun @${handle} met een fooi: kies een bedrag, laat een bericht achter en betaal veilig met Bancontact, iDEAL, Apple Pay of kaart.`;
+    const description = `Steun @${handle} met een fooi: kies een bedrag en scan de betaal-QR met je bank-app.`;
     const path = `/u/${handle}/tip`;
     return {
       links: canonicalLinks(path),

@@ -105,7 +105,7 @@ import { VerifiedHandleBuilder } from "@/components/settings/VerifiedHandleBuild
 import { ProfileFavoritesAccordion } from "@/components/studio/ProfileFavoritesAccordion";
 import { MAX_FAVORITES } from "@/lib/favorites";
 import { ProfileView } from "@/components/profile/ProfileView";
-import { DonationPanel } from "@/components/dashboard/DonationPanel";
+import { TipPagePanel } from "@/components/dashboard/TipPagePanel";
 import {
   checkStudioHandle,
   getStudioAnalytics,
@@ -182,6 +182,8 @@ export function ProfileEditor({ variant = "verified" }: { variant?: ProfileVaria
     ? subdomainAlias
     : null;
   const [rootStatus, setRootStatus] = useState<string | null>(null);
+  /** Exclusieve badges: enkel zichtbaar als keuze na goedkeuring door een admin. */
+  const [approvedTiers, setApprovedTiers] = useState({ business: false, influencer: false });
   const [aliasHandle, setAliasHandle] = useState<string | null>(null);
   /** `profiles.username` van hetzelfde account (geverifieerde rootnaam). */
   const [rootUsername, setRootUsername] = useState<string | null>(null);
@@ -242,6 +244,10 @@ export function ProfileEditor({ variant = "verified" }: { variant?: ProfileVaria
           setRootUsername(alias ? (rootData.rootUsername ?? null) : (data.username ?? null));
           setSubdomainAlias(rootData.subdomainAlias ?? null);
           setRootStatus(rootData.rootStatus ?? null);
+          setApprovedTiers({
+            business: Boolean((data as { isBusiness?: boolean }).isBusiness),
+            influencer: Boolean((data as { isInfluencer?: boolean }).isInfluencer),
+          });
           setAliasHandle(alias ? (data.username ?? null) : (rootData.aliasHandle ?? null));
           setLegalName(data.verifiedLegalName || null);
           setDisplayName(data.displayName ?? "");
@@ -1454,7 +1460,11 @@ export function ProfileEditor({ variant = "verified" }: { variant?: ProfileVaria
                         </InfoHint>
                       </p>
                       <div className="grid gap-2 sm:grid-cols-2">
-                        {BADGE_TYPES.map((b) => {
+                        {BADGE_TYPES.filter(
+                          (b) =>
+                            (b.id !== "influencer" || approvedTiers.influencer) &&
+                            (b.id !== "domain" || approvedTiers.business || Boolean(claimedDomainHandle)),
+                        ).map((b) => {
                           const needsDomain = b.id === "domain" && !claimedDomainHandle;
                           return (
                             <button
@@ -1562,7 +1572,7 @@ export function ProfileEditor({ variant = "verified" }: { variant?: ProfileVaria
                 </AccordionContent>
               </AccordionItem>
 
-              {/* Steunpagina staat er voor iedereen — free én Pro. */}
+              {/* Steunpagina: enkel voor geverifieerde leden met een root-handle (server-side afgedwongen). */}
               <AccordionItem
                 value="support_page"
                 className="rounded-2xl border border-border bg-card px-4 sm:px-5"
@@ -1571,11 +1581,7 @@ export function ProfileEditor({ variant = "verified" }: { variant?: ProfileVaria
                   <span className="text-base font-medium">💛 Steunpagina &amp; donaties</span>
                 </AccordionTrigger>
                 <AccordionContent className="space-y-4 pb-5">
-                  <DonationPanel
-                    handle={claimed || normalized || null}
-                    urlStyle={urlStyle}
-                    verified={verified}
-                  />
+                  <TipPagePanel />
                 </AccordionContent>
               </AccordionItem>
 

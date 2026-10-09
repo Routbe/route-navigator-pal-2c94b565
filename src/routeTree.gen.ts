@@ -70,6 +70,7 @@ import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as StatsTokenRouteImport } from './routes/stats.$token'
 import { Route as UUsernameRouteImport } from './routes/u.$username'
 import { Route as AuthenticatedAdminContactRouteImport } from './routes/_authenticated/admin.contact'
+import { Route as AuthenticatedAdminCustomBadgesRouteImport } from './routes/_authenticated/admin.custom-badges'
 import { Route as AuthenticatedAdminGiftCardsRouteImport } from './routes/_authenticated/admin.gift-cards'
 import { Route as AuthenticatedAdminOpsRouteImport } from './routes/_authenticated/admin.ops'
 import { Route as AuthenticatedAdminSepaRouteImport } from './routes/_authenticated/admin.sepa'
@@ -438,6 +439,12 @@ const AuthenticatedAdminContactRoute =
   AuthenticatedAdminContactRouteImport.update({
     id: '/contact',
     path: '/contact',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminCustomBadgesRoute =
+  AuthenticatedAdminCustomBadgesRouteImport.update({
+    id: '/custom-badges',
+    path: '/custom-badges',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminGiftCardsRoute =
@@ -855,6 +862,7 @@ export interface FileRoutesByFullPath {
   '/u/$username': typeof UUsernameRouteWithChildren
   '/auth/': typeof AuthIndexRoute
   '/admin/contact': typeof AuthenticatedAdminContactRoute
+  '/admin/custom-badges': typeof AuthenticatedAdminCustomBadgesRoute
   '/admin/gift-cards': typeof AuthenticatedAdminGiftCardsRoute
   '/admin/ops': typeof AuthenticatedAdminOpsRoute
   '/admin/sepa': typeof AuthenticatedAdminSepaRoute
@@ -978,6 +986,7 @@ export interface FileRoutesByTo {
   '/u/$username': typeof UUsernameRouteWithChildren
   '/auth': typeof AuthIndexRoute
   '/admin/contact': typeof AuthenticatedAdminContactRoute
+  '/admin/custom-badges': typeof AuthenticatedAdminCustomBadgesRoute
   '/admin/gift-cards': typeof AuthenticatedAdminGiftCardsRoute
   '/admin/ops': typeof AuthenticatedAdminOpsRoute
   '/admin/sepa': typeof AuthenticatedAdminSepaRoute
@@ -1103,6 +1112,7 @@ export interface FileRoutesById {
   '/u/$username': typeof UUsernameRouteWithChildren
   '/auth/': typeof AuthIndexRoute
   '/_authenticated/admin/contact': typeof AuthenticatedAdminContactRoute
+  '/_authenticated/admin/custom-badges': typeof AuthenticatedAdminCustomBadgesRoute
   '/_authenticated/admin/gift-cards': typeof AuthenticatedAdminGiftCardsRoute
   '/_authenticated/admin/ops': typeof AuthenticatedAdminOpsRoute
   '/_authenticated/admin/sepa': typeof AuthenticatedAdminSepaRoute
@@ -1230,6 +1240,7 @@ export interface FileRouteTypes {
     | '/u/$username'
     | '/auth/'
     | '/admin/contact'
+    | '/admin/custom-badges'
     | '/admin/gift-cards'
     | '/admin/ops'
     | '/admin/sepa'
@@ -1353,6 +1364,7 @@ export interface FileRouteTypes {
     | '/u/$username'
     | '/auth'
     | '/admin/contact'
+    | '/admin/custom-badges'
     | '/admin/gift-cards'
     | '/admin/ops'
     | '/admin/sepa'
@@ -1477,6 +1489,7 @@ export interface FileRouteTypes {
     | '/u/$username'
     | '/auth/'
     | '/_authenticated/admin/contact'
+    | '/_authenticated/admin/custom-badges'
     | '/_authenticated/admin/gift-cards'
     | '/_authenticated/admin/ops'
     | '/_authenticated/admin/sepa'
@@ -2051,6 +2064,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContactRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/custom-badges': {
+      id: '/_authenticated/admin/custom-badges'
+      path: '/custom-badges'
+      fullPath: '/admin/custom-badges'
+      preLoaderRoute: typeof AuthenticatedAdminCustomBadgesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/gift-cards': {
       id: '/_authenticated/admin/gift-cards'
       path: '/gift-cards'
@@ -2513,6 +2533,7 @@ const UsernameRouteWithChildren = UsernameRoute._addFileChildren(
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminContactRoute: typeof AuthenticatedAdminContactRoute
+  AuthenticatedAdminCustomBadgesRoute: typeof AuthenticatedAdminCustomBadgesRoute
   AuthenticatedAdminGiftCardsRoute: typeof AuthenticatedAdminGiftCardsRoute
   AuthenticatedAdminOpsRoute: typeof AuthenticatedAdminOpsRoute
   AuthenticatedAdminSepaRoute: typeof AuthenticatedAdminSepaRoute
@@ -2523,6 +2544,7 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminContactRoute: AuthenticatedAdminContactRoute,
+  AuthenticatedAdminCustomBadgesRoute: AuthenticatedAdminCustomBadgesRoute,
   AuthenticatedAdminGiftCardsRoute: AuthenticatedAdminGiftCardsRoute,
   AuthenticatedAdminOpsRoute: AuthenticatedAdminOpsRoute,
   AuthenticatedAdminSepaRoute: AuthenticatedAdminSepaRoute,
